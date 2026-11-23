@@ -46,6 +46,8 @@
 	<true/>
 
 	<!-- Photothèque : analyse sur l'iPhone, suppression de ce que tu choisis -->
+	<key>NSContactsUsageDescription</key>
+	<string>Tri compare les photos de profil de tes contacts aux visages de ta galerie pour proposer un nom à chaque personne. Tout se fait sur ton iPhone, rien n'est envoyé.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Tri analyse tes photos sur ton iPhone pour repérer doublons, photos floues et captures d'écran, puis supprime celles que tu choisis. Aucune photo n'est envoyée sur Internet.</string>
 	<!-- Pas de rappel d'iOS à chaque ouverture si l'accès est limité -->
