@@ -996,6 +996,14 @@ const groupExtra = () => groups.reduce((s, g) => s + g.ids.filter((id, i) => i >
 /* =========================================================
    Piles
    ========================================================= */
+// Seuil des « plus lourdes » : les 60 éléments les plus gros (photos et vidéos), recalculé quand la galerie change
+let _heavy = { n: -1, min: Infinity };
+function heavyMin() {
+  if (_heavy.n === P.size) return _heavy.min;
+  const sizes = [...P.values()].map(p => p.size || 0).filter(x => x > 0).sort((a, b) => b - a);
+  _heavy = { n: P.size, min: sizes.length ? Math.max(sizes[Math.min(59, sizes.length - 1)], 1) : Infinity };
+  return _heavy.min;
+}
 const BASE = {
   todo:   { label: 'Non triées', filter: p => !decided(p) },
   all:    { label: 'Toutes les photos', filter: () => true, review: true, lib: true },
@@ -1005,6 +1013,7 @@ const BASE = {
   bright: { label: 'Surexposées', filter: isBright, order: 'quality', burst: true },
   shot:   { label: "Captures d'écran", filter: p => p.shot, burst: true },
   videos: { label: 'Vidéos (les plus lourdes)', filter: p => p.kind === 'video', order: 'size' },
+  heavy:  { label: 'Les plus lourdes', filter: p => (p.size || 0) >= heavyMin(), order: 'size', review: true },
   later:  { label: 'Plus tard', filter: p => p.status === 'later', review: true },
   fav:    { label: 'Favoris', filter: p => p.fav, review: true },
   kept:   { label: 'Gardées', filter: p => p.status === 'keep', review: true },
@@ -1457,6 +1466,7 @@ function renderHome() {
     { k: 'dark', l: 'Trop sombres', n: cntTodo(isDark), c: '#3a3a3c', i: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>' },
     { k: 'bright', l: 'Surexposées', n: cntTodo(isBright), c: '#ffcc00', i: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2"/>' },
     { k: 'shot', l: "Captures d'écran", n: cntTodo(BASE.shot.filter), c: '#30b0c7', i: '<rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/>' },
+    { k: 'heavy', l: `Les plus lourdes · ${fmtSize(all.filter(BASE.heavy.filter).reduce((s2, p) => s2 + (p.size || 0), 0))}`, n: cnt(BASE.heavy.filter), c: '#ff6b2c', i: '<path d="M6 8h12l2 12H4z"/><circle cx="12" cy="5" r="2.2"/>' },
     { k: 'videos', l: 'Vidéos', n: cntTodo(BASE.videos.filter), c: '#ff2d55', i: '<rect x="2" y="6" width="14" height="12" rx="2"/><path d="m22 8-6 4 6 4z"/>' },
     { k: 'later', l: 'Plus tard', n: cnt(BASE.later.filter), c: '#8e8e93', i: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>' },
   ];

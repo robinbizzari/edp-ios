@@ -29,6 +29,11 @@ final class WebViewController: UIViewController, WKScriptMessageHandler, WKNavig
         web.allowsBackForwardNavigationGestures = false
         web.allowsLinkPreview = false
         web.scrollView.contentInsetAdjustmentBehavior = .never   // le site gère lui-même l'encoche et la barre du bas
+        // pas de zoom par pincement : l'interface est faite pour la taille de l'écran
+        web.scrollView.minimumZoomScale = 1
+        web.scrollView.maximumZoomScale = 1
+        web.scrollView.bouncesZoom = false
+        web.scrollView.pinchGestureRecognizer?.isEnabled = false
         web.isOpaque = false
         let background = UIColor(named: "LaunchBg") ?? .systemBackground
         web.backgroundColor = background
