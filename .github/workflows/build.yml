@@ -19,6 +19,9 @@ jobs:
     timeout-minutes: 30
     env:
       VERSION: 1.0.${{ github.run_number }}
+    defaults:
+      run:
+        working-directory: EDP-iOS   # les fichiers de l'appli sont dans ce dossier du dépôt
     steps:
       - uses: actions/checkout@v4
 
@@ -66,8 +69,8 @@ jobs:
         with:
           name: applis-${{ env.VERSION }}
           path: |
-            EDP.ipa
-            Tri.ipa
+            EDP-iOS/EDP.ipa
+            EDP-iOS/Tri.ipa
 
       - name: Publier (Releases)
         uses: softprops/action-gh-release@v2
@@ -77,9 +80,9 @@ jobs:
           body: |
             Nouvelles versions d'EDP et de Tri. Dans AltStore : onglet Sources (si tu as ajouté la source) ou « + » avec EDP.ipa / Tri.ipa.
           files: |
-            EDP.ipa
-            Tri.ipa
-            apps.json
+            EDP-iOS/EDP.ipa
+            EDP-iOS/Tri.ipa
+            EDP-iOS/apps.json
           make_latest: true
 
       - name: Journal en cas d'échec
@@ -87,5 +90,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: journal-compilation
-          path: build-*.log
+          path: EDP-iOS/build-*.log
           if-no-files-found: ignore
