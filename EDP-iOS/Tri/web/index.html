@@ -317,6 +317,97 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .nplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:50%;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .nplay svg{width:34px;height:34px;margin-left:4px}
 #vMedia{position:relative}
+
+.input{width:100%;min-width:0;padding:11px 13px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font:inherit;font-size:16px}
+.input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+/* ---------- Personnes ---------- */
+.ppl-cta{display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px 16px}
+.ppl-cta b{display:block;font-size:16px;margin-bottom:2px}.ppl-cta>svg{width:18px;height:18px;color:var(--muted)}
+.ppl-cta-ic{width:46px;height:46px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:none}.ppl-cta-ic svg{width:26px;height:26px}
+.st-more{margin-left:auto;color:var(--accent);font-weight:600;text-transform:none;letter-spacing:0;font-size:14px;padding:6px 0}
+.section-title .st-n,.section-title .st-more{margin-left:auto!important}.st-n{font-variant-numeric:tabular-nums}
+html.sheet-open .toast,html.sheet-open #toast{bottom:auto;top:calc(var(--safe-t) + 12px)}
+.ppl-rail{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:4px 4px 6px;margin:0 -4px}.ppl-rail::-webkit-scrollbar{display:none}
+.ppl{flex:none;width:70px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;font-weight:500}
+.ppl img{width:66px;height:66px;border-radius:50%;object-fit:cover;background:var(--card2);box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--accent-soft)}
+.ppl span{max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ppl.q img{box-shadow:0 0 0 2px var(--card),0 0 0 4px var(--line)}.ppl.q span{color:var(--muted)}
+.ppl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(102px,1fr));gap:12px}
+.pcard{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 6px 10px;border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow);text-align:center;min-width:0}
+.pcard img{width:78px;height:78px;border-radius:50%;object-fit:cover;background:var(--card2);margin-bottom:4px}
+.pcard b{font-size:14px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pcard span{font-size:12px;color:var(--muted)}
+.pcard.sk span{width:78px;height:78px;border-radius:50%;background:var(--card2)}.pcard.sk i{width:60%;height:10px;border-radius:5px;background:var(--card2);margin-top:6px}
+.ppl-intro{text-align:center}.ppl-intro h2{margin:14px 0 6px}
+.ppl-faces{display:flex;justify-content:center;margin-top:4px}.ppl-faces span{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;margin:0 -6px;box-shadow:0 0 0 3px var(--card)}.ppl-faces svg{width:28px;height:28px}
+.ppl-privacy{display:flex;gap:8px;align-items:flex-start;text-align:left;background:var(--ok-soft);border-radius:12px;padding:10px 12px;margin:14px 0}.ppl-privacy svg{width:18px;height:18px;flex:none;color:var(--ok)}
+.ppl-tools{margin-top:22px}
+.gs-head{display:flex;gap:14px;align-items:center;margin-bottom:12px}.gs-head img{width:72px;height:72px;border-radius:50%;object-fit:cover}
+.gs-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 0 14px}.gs-strip::-webkit-scrollbar{display:none}.gs-strip img{width:52px;height:52px;border-radius:12px;object-fit:cover;flex:none;background:var(--card2)}
+.gs-people{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.gs-people button{flex:none;width:64px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px}.gs-people img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+.person-head{display:flex;gap:16px;align-items:center}.person-head img{width:84px;height:84px;border-radius:50%;object-fit:cover}.person-head h2{margin:0 0 2px;font-size:24px}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;border-radius:14px;overflow:hidden}
+.pph{position:relative;aspect-ratio:1;background:var(--card2)}.pph img{width:100%;height:100%;object-fit:cover;display:block}
+.pph.on::after{content:"";position:absolute;inset:0;background:rgba(255,59,48,.35);box-shadow:inset 0 0 0 3px var(--danger)}
+.sugg{padding:12px}.sugg .gs-strip{margin-bottom:10px}
+
+/* ================= Refonte : les photos d'abord (mêmes couleurs) ================= */
+:root{--radius:20px;--display:ui-rounded,"SF Pro Rounded",system-ui,-apple-system,"Segoe UI",sans-serif}
+header.top h1,.summary b,.section-title,.mcard .mname,.pcard b,.person-head h2,#trashCount,.swcount,.lrow .cnt,.ring>span{font-family:var(--display)}
+header.top h1{font-size:32px;font-weight:800;letter-spacing:-.015em}
+.section-title{font-size:21px;font-weight:800;text-transform:none;letter-spacing:-.01em;color:var(--text);margin:28px 2px 12px}
+.card{border-radius:22px}
+.btn{height:48px;border-radius:14px;font-size:16px}
+.btn.sm{height:36px;border-radius:11px;font-size:14px}
+
+/* Accueil : carte héros bleue */
+#homeContent>.card:first-child{background:radial-gradient(120% 140% at 0% 0%,#3d9bff 0%,var(--accent) 45%,#2952e8 100%);color:#fff;padding:20px;box-shadow:0 18px 40px -16px rgba(10,124,255,.6)}
+#homeContent>.card:first-child .muted,#homeContent>.card:first-child .streak{color:rgba(255,255,255,.85)}
+#homeContent>.card:first-child .ring{width:84px;height:84px;background:conic-gradient(#fff calc(var(--p)*1%),rgba(255,255,255,.22) 0)}
+#homeContent>.card:first-child .ring>span{width:68px;height:68px;background:#1d6cf0;color:#fff;font-size:20px;font-weight:800}
+.summary b{font-size:26px;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+#btnContinue{background:#fff;color:var(--accent);box-shadow:0 6px 16px -8px rgba(0,0,0,.35)}
+#homeContent>.card:first-child .btn.secondary{background:rgba(255,255,255,.18);color:#fff}
+
+/* Mois : carrousel de grandes cartes photo */
+.months{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 -16px;padding:2px 16px 10px}
+.months::-webkit-scrollbar{display:none}
+.mcard{flex:none;width:min(46%,210px);scroll-snap-align:start;border-radius:22px}
+.mcard .cover{aspect-ratio:3/4}
+.mcard .cov-wrap::after{background:linear-gradient(transparent 40%,rgba(0,0,0,.72))}
+.mcard .mname{font-size:19px;font-weight:800;left:12px;bottom:12px;right:12px;line-height:1.1}
+.mcard .mbody{position:absolute;left:0;right:0;bottom:0;padding:0 12px 10px;color:#fff;z-index:1}
+.mcard .mbody .small{display:none}
+.mcard .mbody .progress{background:rgba(255,255,255,.28);height:4px}
+.mcard .mname{bottom:24px}
+
+/* Nettoyage intelligent : tuiles */
+#smartList,#libList{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:none;box-shadow:none;overflow:visible}
+#smartList .lrow,#libList .lrow{flex-direction:column;align-items:flex-start;gap:12px;padding:14px;border:0;border-radius:20px;background:var(--card);box-shadow:var(--shadow);position:relative;min-height:112px}
+#smartList .lrow>svg:last-child,#libList .lrow>svg:last-child{display:none}
+#smartList .lrow .ic,#libList .lrow .ic{width:38px;height:38px;border-radius:12px}
+#smartList .lrow .lbl,#libList .lrow .lbl{font-size:14.5px;font-weight:600;line-height:1.2;margin-top:auto}
+#smartList .lrow .cnt,#libList .lrow .cnt{position:absolute;top:14px;right:14px;font-size:22px;font-weight:800;color:var(--text)}
+#smartList .lrow.zero{opacity:.55}
+
+/* Écran de tri : photo immersive */
+.swipe-wrap{height:calc(100dvh - 330px - var(--safe-b) - var(--safe-t))}
+.swipe-card{border-radius:28px;box-shadow:0 24px 50px -20px rgba(0,0,0,.45);background:#000}
+.swipe-card .swbg{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(28px) saturate(1.2) brightness(.62);transform:scale(1.08)}
+.swipe-card img,.swipe-card video{position:relative}
+.swipe-card .info{padding:40px 14px 14px;font-size:13px}
+.swipe-card.behind{transform:scale(.93) translateY(16px);opacity:.75;filter:brightness(.85)}
+.stamp{font-family:var(--display);font-size:26px;border-width:4px;border-radius:14px;background:rgba(0,0,0,.18);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.swcount{font-weight:700;color:var(--text)}
+.swipe-actions{gap:16px;margin-top:4px}
+.round{box-shadow:0 10px 24px -10px rgba(0,0,0,.3),0 0 0 1px var(--line)}
+.round.trash,.round.keep{width:72px;height:72px}.round.trash svg,.round.keep svg{width:32px;height:32px}
+.round.trash{background:var(--danger);color:#fff;box-shadow:0 12px 26px -10px rgba(255,59,48,.7)}
+.round.keep{background:var(--ok);color:#fff;box-shadow:0 12px 26px -10px rgba(52,199,89,.7)}
+.round.small{width:50px;height:50px}
+
+/* Barre d'onglets en verre */
+nav.tabs{background:color-mix(in srgb,var(--card) 78%,transparent);backdrop-filter:saturate(1.6) blur(20px);-webkit-backdrop-filter:saturate(1.6) blur(20px);border-top:1px solid var(--line)}
+nav.tabs button.active svg{transform:translateY(-1px)}
+@media (prefers-reduced-motion:no-preference){.mcard,.lrow,.pcard,.btn{transition:transform .15s ease}.mcard:active,.lrow:active,.pcard:active{transform:scale(.97)}}
 </style>
 </head>
 <body>
@@ -372,6 +463,8 @@ input[type=range]{width:100%;accent-color:var(--accent)}
           </div>
         </div>
 
+        <div id="peopleHome"></div>
+
         <div class="section-title"><span>Par mois</span></div>
         <div class="months" id="months"></div>
 
@@ -382,6 +475,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
         <div class="list" id="libList"></div>
       </div>
     </section>
+
+    <!-- PERSONNES -->
+    <section class="view" id="v-people"><div id="peopleBody"></div></section>
+    <section class="view" id="v-person"><div id="personBody"></div></section>
 
     <!-- PILE (grille) -->
     <section class="view" id="v-pile">
@@ -1047,8 +1144,241 @@ document.addEventListener('click', e => {
 /* =========================================================
    Navigation
    ========================================================= */
-const TITLES = { home: 'Accueil', swipe: 'Trier', dups: 'Doublons', albums: 'Albums', trash: 'Corbeille', pile: '', guided: 'À supprimer' };
-const SUB = { pile: true, guided: true };
+const TITLES = { people: 'Personnes', person: '', home: 'Accueil', swipe: 'Trier', dups: 'Doublons', albums: 'Albums', trash: 'Corbeille', pile: '', guided: 'À supprimer' };
+const SUB = { pile: true, guided: true, people: true, person: true };
+/* ---------- Personnes : visages reconnus sur l'iPhone (appli uniquement, rien n'est envoyé) ---------- */
+const PPL_KEY = 'tri.people.v1';
+let PPL = (() => { try { return JSON.parse(localStorage.getItem(PPL_KEY)); } catch (e) { return null; } })() || {};
+PPL = Object.assign({ persons: {}, assign: {}, ignored: {}, offset: 0, scanned: false, contacts: false }, PPL);
+const pplSave = () => { try { localStorage.setItem(PPL_KEY, JSON.stringify(PPL)); } catch (e) { toast('Mémoire pleine : noms non enregistrés'); } };
+let FG = null, fScan = null, fBusy = false, curPerson = null, fSel = null;
+const faceImg = (f, sz = 180) => `tri://app/ph/face?id=${encodeURIComponent(f.asset)}&b=${f.box.map(x => (+x).toFixed(4)).join(',')}&s=${sz}`;
+const photoImg = (asset, sz = 360) => `tri://app/ph/thumb?id=${encodeURIComponent(asset)}&s=${sz}`;
+const newPid = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const gKey = g => g.cover.key;   // identifiant d'un groupe le temps d'une session
+
+window.addEventListener('tri-native', e => {
+  const d = e.detail || {}; if (d.name !== 'faces.progress') return;
+  fScan = d.data; if (currentView === 'people') paintScan(); else if (currentView === 'home') renderPeopleHome();
+});
+
+// Personnes nommées + groupes encore inconnus, à partir des groupes calculés par l'iPhone et des noms déjà donnés
+function peopleModel() {
+  const persons = {};
+  for (const [pid, p] of Object.entries(PPL.persons)) persons[pid] = { pid, name: p.name, contact: p.contact, faces: new Map() };
+  for (const [key, a] of Object.entries(PPL.assign)) if (a.p && persons[a.p]) persons[a.p].faces.set(key, { key, asset: a.a, box: a.b });
+  const unknown = [];
+  for (const g of (FG && FG.groups) || []) {
+    if (PPL.ignored[gKey(g)]) continue;
+    const votes = {};
+    for (const f of g.faces) { const a = PPL.assign[f.key]; if (a && a.p && persons[a.p]) votes[a.p] = (votes[a.p] || 0) + 1; }
+    const top = Object.entries(votes).sort((x, y) => y[1] - x[1])[0];
+    if (top && top[1] >= Math.max(1, Math.ceil(g.faces.length * 0.25))) {
+      const P2 = persons[top[0]];
+      for (const f of g.faces) { const a = PPL.assign[f.key]; if (a && (a.p !== top[0] && (a.p || (a.not || []).includes(top[0])))) continue; P2.faces.set(f.key, f); }
+    } else if (!g.faces.every(f => PPL.assign[f.key])) unknown.push(g);
+  }
+  const list = Object.values(persons).map(p => { const assets = [...new Set([...p.faces.values()].map(f => f.asset))]; return { ...p, assets, cover: PPL.persons[p.pid].cover || [...p.faces.values()][0] }; })
+    .filter(p => p.faces.size).sort((a, b) => b.assets.length - a.assets.length);
+  return { persons: list, unknown };
+}
+function assignFaces(faces, pid) {
+  for (const f of faces) { const prev = PPL.assign[f.key]; PPL.assign[f.key] = { p: pid, a: f.asset, b: f.box, not: prev && prev.not }; }
+}
+function namePerson(name, contact) {
+  name = String(name || '').trim().slice(0, 60); if (!name) return null;
+  const same = Object.entries(PPL.persons).find(([, p]) => (contact && p.contact === contact) || p.name.toLowerCase() === name.toLowerCase());
+  if (same) return same[0];
+  const pid = newPid(); PPL.persons[pid] = { name, contact: contact || null }; return pid;
+}
+
+async function loadGroups() {
+  if (!NATIVE) return;
+  const base = (FG && FG.suggested) || 0;
+  try {
+    FG = await native('faces.clusters', { threshold: base ? Math.min(0.97, Math.max(0.5, base + PPL.offset)) : 0, min: 3 });
+    if (!base && FG.suggested && PPL.offset) FG = await native('faces.clusters', { threshold: Math.min(0.97, Math.max(0.5, FG.suggested + PPL.offset)), min: 3 });
+  } catch (e) { toast(e.message); }
+  if (currentView === 'people') renderPeople(); else if (currentView === 'person') renderPerson(); else if (currentView === 'home') renderPeopleHome();
+}
+async function scanFaces() {
+  if (fBusy) return; fBusy = true; fScan = { done: 0, total: 0, faces: 0 }; paintScan();
+  try {
+    const r = await native('faces.scan');
+    PPL.scanned = true; pplSave();
+    toast(r.cancelled ? 'Analyse en pause : relance-la quand tu veux, elle reprendra où elle s’est arrêtée.' : `${plural(r.faces, 'visage trouvé', 'visages trouvés')} sur tes photos`);
+  } catch (e) { toast(e.message); }
+  fBusy = false; fScan = null; await loadGroups();
+}
+async function useContacts() {
+  try { const r = await native('faces.contacts'); PPL.contacts = true; pplSave(); toast(r.count ? `${plural(r.count, 'contact avec photo', 'contacts avec photo')} : je propose des noms` : 'Aucun contact n’a de photo de profil'); await loadGroups(); }
+  catch (e) { toast(e.message); }
+}
+
+function renderPeopleHome() {
+  const el = $('#peopleHome'); if (!el) return;
+  if (!NATIVE) { el.innerHTML = ''; return; }
+  if (!PPL.scanned) {
+    el.innerHTML = `<div class="section-title"><span>Personnes</span></div>
+      <button class="card ppl-cta" data-go-people><span class="ppl-cta-ic">${svg('<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2A5 5 0 0 1 21.5 19"/>')}</span>
+      <span class="grow"><b>${fBusy ? 'Analyse des visages…' : 'Retrouve les gens de tes photos'}</b><span class="muted small">${fBusy && fScan ? `${fScan.done} / ${fScan.total} photos` : 'Albums par personne, noms de tes contacts. Tout reste sur ton iPhone.'}</span></span>${svg('<path d="m9 6 6 6-6 6"/>')}</button>`;
+    return;
+  }
+  if (!FG) { loadGroups(); }
+  const m = peopleModel();
+  const items = [...m.persons.slice(0, 12).map(p => ({ f: p.cover, t: p.name, go: `data-person="${p.pid}"` })),
+    ...m.unknown.slice(0, Math.max(0, 12 - m.persons.length)).map(g => ({ f: g.cover, t: g.contact ? g.contact.name + ' ?' : 'À nommer', go: `data-group="${gKey(g)}"`, q: true }))];
+  el.innerHTML = `<div class="section-title"><span>Personnes</span><button class="st-more" data-go-people>Tout voir</button></div>
+    <div class="ppl-rail">${items.length ? items.map(i => `<button class="ppl ${i.q ? 'q' : ''}" ${i.go}><img src="${faceImg(i.f)}" alt="" loading="lazy"><span>${esc(i.t)}</span></button>`).join('')
+      : `<div class="muted small" style="padding:6px 4px">${fBusy ? 'Analyse en cours…' : 'Aucun visage regroupé pour l’instant.'}</div>`}</div>`;
+}
+
+function paintScan() {
+  const box = $('#fScanBox'); if (!box) return renderPeople();
+  const s = fScan || { done: 0, total: 0, faces: 0 }, pct = s.total ? Math.round(s.done / s.total * 100) : 0;
+  box.innerHTML = `<div class="row nowrap"><b class="grow">${s.total ? `Analyse : ${s.done} / ${s.total} photos` : 'Préparation de l’analyse…'}</b><span class="muted small">${plural(s.faces, 'visage')}</span></div>
+    <div class="progress"><div style="width:${pct}%"></div></div>
+    <div class="row nowrap"><span class="muted small grow">Garde Tri ouvert. Tu peux arrêter : la suite reprendra plus tard.</span><button class="btn ghost sm" data-fcancel>Arrêter</button></div>`;
+}
+
+function renderPeople() {
+  const el = $('#peopleBody');
+  if (!NATIVE) { el.innerHTML = `<div class="card"><b>Disponible dans l’appli Tri</b><p class="muted small">La reconnaissance des visages a besoin de l’iPhone.</p></div>`; return; }
+  if (fBusy) { el.innerHTML = `<div class="card" id="fScanBox"></div>`; paintScan(); return; }
+  if (!PPL.scanned) {
+    el.innerHTML = `<div class="card hero ppl-intro">
+      <div class="ppl-faces">${['#0a7cff', '#34c759', '#ff9f0a', '#af52de'].map(c => `<span style="background:${c}">${svg('<circle cx="12" cy="9" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')}</span>`).join('')}</div>
+      <h2>Retrouve les gens de tes photos</h2>
+      <p class="muted">Tri repère les visages, regroupe ceux qui se ressemblent et te propose les noms de tes contacts. Tu crées ensuite un album par personne dans Photos.</p>
+      <p class="small ppl-privacy">${svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>')} Tout se passe sur ton iPhone : aucune photo ni aucun visage n’est envoyé.</p>
+      <button class="btn block" data-fscan>Analyser mes photos</button>
+      <p class="muted small" style="margin-top:10px">Compte quelques minutes pour quelques milliers de photos. Les fois suivantes, seules les nouvelles photos sont analysées.</p></div>`;
+    return;
+  }
+  if (!FG) { el.innerHTML = skelPeople(); loadGroups(); return; }
+  const m = peopleModel();
+  el.innerHTML = `
+    ${m.persons.length ? `<div class="section-title"><span>Tes personnes</span><span class="st-n">${m.persons.length}</span></div>
+      <div class="ppl-grid">${m.persons.map(p => `<button class="pcard" data-person="${p.pid}"><img src="${faceImg(p.cover, 240)}" alt="" loading="lazy"><b>${esc(p.name)}</b><span>${plural(p.assets.length, 'photo')}</span></button>`).join('')}</div>` : ''}
+    ${m.unknown.length ? `<div class="section-title"><span>À nommer</span><span class="st-n">${m.unknown.length}</span></div>
+      <div class="ppl-grid">${m.unknown.map(g => `<button class="pcard q" data-group="${gKey(g)}"><img src="${faceImg(g.cover, 240)}" alt="" loading="lazy">${g.contact ? `<b>${esc(g.contact.name)} ?</b>` : '<b class="muted">Qui est-ce ?</b>'}<span>${plural(new Set(g.faces.map(f => f.asset)).size, 'photo')}</span></button>`).join('')}</div>`
+      : (m.persons.length ? '' : `<div class="card"><b>Aucun groupe de visages</b><p class="muted small">Essaie un regroupement plus large ci-dessous, ou analyse plus de photos.</p></div>`)}
+    <div class="card ppl-tools">
+      <div class="row nowrap"><span class="grow"><b>Regroupement</b><span class="muted small" style="display:block">Strict : moins d’erreurs. Large : retrouve plus de photos (enfant et adulte, par exemple).</span></span></div>
+      <div class="row nowrap" style="gap:10px;margin-top:8px"><span class="small muted">Strict</span><input type="range" id="fOffset" min="-0.12" max="0.12" step="0.02" value="${-PPL.offset}" class="grow"><span class="small muted">Large</span></div>
+      <div class="row" style="margin-top:12px;gap:8px">
+        <button class="btn secondary sm" data-fcontacts>${PPL.contacts ? 'Mettre à jour les noms des contacts' : 'Proposer les noms de mes contacts'}</button>
+        <button class="btn secondary sm" data-fscan>Analyser les nouvelles photos</button>
+        ${m.persons.length ? `<button class="btn secondary sm" data-falbums>Créer tous les albums</button>` : ''}
+      </div>
+      <p class="muted small" style="margin-top:10px">${plural((FG && FG.faces) || 0, 'visage analysé', 'visages analysés')}. La reconnaissance se trompe parfois : ouvre une personne pour corriger.</p>
+    </div>`;
+}
+const skelPeople = () => `<div class="ppl-grid">${Array.from({ length: 6 }, () => '<div class="pcard sk"><span></span><i></i></div>').join('')}</div>`;
+
+function groupSheet(g) {
+  const m = peopleModel(), n = new Set(g.faces.map(f => f.asset)).size;
+  openSheet(`<div class="gs-head"><img src="${faceImg(g.cover, 300)}" alt=""><div><h3 style="margin:0">Qui est-ce ?</h3><div class="muted small">${plural(n, 'photo')} avec ce visage</div></div></div>
+    <div class="gs-strip">${g.faces.slice(0, 12).map(f => `<img src="${faceImg(f, 140)}" alt="" loading="lazy">`).join('')}</div>
+    ${g.contact ? `<button class="btn block" data-gname="${esc(g.contact.name)}" data-gcontact="${esc(g.contact.id)}">C’est ${esc(g.contact.name)}</button>` : ''}
+    <button class="btn ${g.contact ? 'secondary' : ''} block" data-gpick style="margin-top:8px">${svg('<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>')} Choisir dans mes contacts</button>
+    <div class="row nowrap" style="margin-top:8px;gap:8px"><input class="input grow" id="gName" placeholder="Ou tape un prénom" maxlength="60" autocomplete="off"><button class="btn secondary" data-gtype>OK</button></div>
+    ${m.persons.length ? `<div class="section-title" style="margin-top:16px"><span>C’est une personne déjà nommée</span></div>
+      <div class="gs-people">${m.persons.map(p => `<button data-gto="${p.pid}"><img src="${faceImg(p.cover, 120)}" alt=""><span>${esc(p.name)}</span></button>`).join('')}</div>` : ''}
+    <button class="btn ghost block" data-gignore style="margin-top:12px">Ignorer ce groupe</button>`);
+  const s = $('#sheet');
+  const done = pid => { if (!pid) return; assignFaces(g.faces, pid); if (!PPL.persons[pid].cover) PPL.persons[pid].cover = g.cover; pplSave(); closeSheet(); toast(`${PPL.persons[pid].name} : ${plural(n, 'photo ajoutée', 'photos ajoutées')}`); refreshView(); };
+  s.onclick = async e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.gname) done(namePerson(b.dataset.gname, b.dataset.gcontact));
+    else if (b.hasAttribute('data-gpick')) { try { const c = await native('contacts.pick'); if (!c.cancelled) done(namePerson(c.name, c.id)); } catch (er) { toast(er.message); } }
+    else if (b.hasAttribute('data-gtype')) { const v = $('#gName').value; if (!v.trim()) { $('#gName').focus(); return; } done(namePerson(v)); }
+    else if (b.dataset.gto) done(b.dataset.gto);
+    else if (b.hasAttribute('data-gignore')) { PPL.ignored[gKey(g)] = 1; pplSave(); closeSheet(); refreshView(); }
+  };
+  $('#gName').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); s.querySelector('[data-gtype]').click(); } });
+}
+
+function renderPerson() {
+  const el = $('#personBody'), m = peopleModel(), p = m.persons.find(x => x.pid === curPerson);
+  if (!p) { show('people'); return; }
+  $('#title').textContent = p.name;
+  const sel = fSel;
+  el.innerHTML = `<div class="card person-head"><img src="${faceImg(p.cover, 300)}" alt=""><div class="grow"><h2>${esc(p.name)}</h2><div class="muted small">${plural(p.assets.length, 'photo')}</div></div></div>
+    <button class="btn block" data-palbum style="margin-top:12px">${svg('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>')} Créer l’album dans Photos</button>
+    <div class="row nowrap" style="gap:8px;margin:8px 0 12px">
+      <button class="btn secondary grow" data-prename>Renommer</button>
+      <button class="btn secondary grow" data-psel>${sel ? 'Terminer' : 'Retirer des photos'}</button>
+    </div>
+    <div id="pSuggest"></div>
+    ${sel ? `<div class="card" style="padding:12px"><div class="row nowrap"><span class="grow small">${sel.size ? plural(sel.size, 'photo choisie', 'photos choisies') : 'Touche les photos où ce n’est pas ' + esc(p.name)}</span><button class="btn danger sm" data-premove ${sel.size ? '' : 'disabled'}>Retirer</button></div></div>` : ''}
+    <div class="pgrid">${p.assets.map(a => `<button class="pph ${sel && sel.has(a) ? 'on' : ''}" data-pa="${esc(a)}"><img src="${photoImg(a)}" alt="" loading="lazy"></button>`).join('')}</div>
+    <button class="btn ghost block" data-pdelete style="margin-top:14px">Oublier cette personne</button>`;
+  suggestFor(p, m);
+}
+// « Est-ce aussi … ? » : groupes inconnus qui ressemblent à cette personne (utile pour enfant / adulte)
+async function suggestFor(p, m) {
+  const box = $('#pSuggest'); if (!box || !m.unknown.length) return;
+  const keys = [...p.faces.keys()].slice(0, 400), thr = ((FG && FG.threshold) || 0.8) - 0.1, hits = [];
+  for (const g of m.unknown.slice(0, 30)) {
+    try { const r = await native('faces.similarity', { a: keys, b: g.faces.map(f => f.key) }); if (r.score >= thr) hits.push([g, r.score]); } catch (e) { break; }
+  }
+  if (curPerson !== p.pid || !$('#pSuggest')) return;
+  hits.sort((a, b) => b[1] - a[1]);
+  box.innerHTML = hits.length ? `<div class="section-title"><span>Est-ce aussi ${esc(p.name)} ?</span></div>${hits.slice(0, 5).map(([g]) => `<div class="card sugg"><div class="gs-strip">${g.faces.slice(0, 6).map(f => `<img src="${faceImg(f, 120)}" alt="">`).join('')}</div>
+    <div class="row nowrap" style="gap:8px"><span class="grow muted small">${plural(new Set(g.faces.map(f => f.asset)).size, 'photo')}</span><button class="btn secondary sm" data-sno="${gKey(g)}">Non</button><button class="btn sm" data-syes="${gKey(g)}">Oui, c’est ${esc(p.name)}</button></div></div>`).join('')}` : '';
+}
+
+document.addEventListener('click', async e => {
+  const t = e.target;
+  if (t.closest('[data-go-people]')) { show('people'); return; }
+  const pb = t.closest('[data-person]'); if (pb) { curPerson = pb.dataset.person; fSel = null; show('person'); return; }
+  const gb = t.closest('[data-group]'); if (gb) { const g = ((FG && FG.groups) || []).find(x => gKey(x) === gb.dataset.group); if (g) groupSheet(g); return; }
+  if (t.closest('[data-fscan]')) { scanFaces(); return; }
+  if (t.closest('[data-fcancel]')) { native('faces.cancel').catch(() => {}); return; }
+  if (t.closest('[data-fcontacts]')) { useContacts(); return; }
+  if (t.closest('[data-falbums]')) {
+    const al = peopleModel().persons.map(p => ({ name: p.name, ids: p.assets }));
+    try { const r = await native('photos.albums', { albums: al }); toast(`${plural(r.count || al.length, 'album créé ou mis à jour', 'albums créés ou mis à jour')} dans Photos`); } catch (er) { toast(er.message); }
+    return;
+  }
+  if (currentView !== 'person') return;
+  const m = peopleModel(), p = m.persons.find(x => x.pid === curPerson); if (!p) return;
+  if (t.closest('[data-palbum]')) { try { await native('photos.albums', { albums: [{ name: p.name, ids: p.assets }] }); toast(`Album « ${p.name} » créé dans Photos`); } catch (er) { toast(er.message); } return; }
+  if (t.closest('[data-psel]')) { fSel = fSel ? null : new Set(); renderPerson(); return; }
+  const ph = t.closest('[data-pa]');
+  if (ph && fSel) { const a = ph.dataset.pa; fSel.has(a) ? fSel.delete(a) : fSel.add(a); renderPerson(); return; }
+  if (t.closest('[data-premove]') && fSel && fSel.size) {
+    for (const f of p.faces.values()) if (fSel.has(f.asset)) { const prev = PPL.assign[f.key] || {}; PPL.assign[f.key] = { p: null, a: f.asset, b: f.box, not: [...new Set([...(prev.not || []), p.pid])] }; }
+    const n = fSel.size; fSel = null; pplSave(); toast(`${plural(n, 'photo retirée', 'photos retirées')} de ${p.name}`); renderPerson(); return;
+  }
+  if (t.closest('[data-prename]')) {
+    openSheet(`<h3>Renommer</h3><input class="input" id="pNew" value="${esc(p.name)}" maxlength="60"><div class="row" style="gap:8px;margin-top:10px"><button class="btn grow" id="pOk">Enregistrer</button><button class="btn secondary" id="pPick">Mes contacts</button></div>`);
+    const save = (name, contact) => { name = String(name || '').trim(); if (!name) return; PPL.persons[p.pid].name = name.slice(0, 60); if (contact) PPL.persons[p.pid].contact = contact; pplSave(); closeSheet(); renderPerson(); };
+    $('#pOk').onclick = () => save($('#pNew').value);
+    $('#pPick').onclick = async () => { try { const c = await native('contacts.pick'); if (!c.cancelled) save(c.name, c.id); } catch (er) { toast(er.message); } };
+    return;
+  }
+  const yes = t.closest('[data-syes]'), no = t.closest('[data-sno]');
+  if (yes || no) {
+    const g = m.unknown.find(x => gKey(x) === (yes || no).dataset[yes ? 'syes' : 'sno']); if (!g) return;
+    if (yes) { assignFaces(g.faces, p.pid); toast(`Ajouté à ${p.name}`); }
+    else for (const f of g.faces) { const prev = PPL.assign[f.key]; if (!prev || !prev.p) PPL.assign[f.key] = { p: null, a: f.asset, b: f.box, not: [...new Set([...((prev && prev.not) || []), p.pid])] }; }
+    // un « non » ne doit pas cacher le groupe ailleurs : on retire juste l'association refusée
+    if (no) for (const f of g.faces) { const a = PPL.assign[f.key]; if (a && !a.p && (!a.not || !a.not.length)) delete PPL.assign[f.key]; }
+    pplSave(); renderPerson(); return;
+  }
+  if (t.closest('[data-pdelete]')) {
+    if (!confirm(`Oublier ${p.name} ? Les photos ne sont pas supprimées, seulement le nom et les regroupements faits à la main.`)) return;
+    for (const [k, a] of Object.entries(PPL.assign)) if (a.p === p.pid) delete PPL.assign[k];
+    delete PPL.persons[p.pid]; pplSave(); show('people');
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.id !== 'fOffset') return;
+  clearTimeout(window.__fOff); window.__fOff = setTimeout(() => { PPL.offset = -(+e.target.value); pplSave(); loadGroups(); }, 250);
+});
+
 function show(v) {
   if (!SUB[v] && !SUB[currentView]) prevView = v;
   if (SUB[v] && !SUB[currentView]) prevView = currentView;
@@ -1070,9 +1400,11 @@ function refreshView() {
   else if (v === 'trash') renderTrash();
   else if (v === 'pile') renderPile();
   else if (v === 'guided') renderGuided();
+  else if (v === 'people') renderPeople();
+  else if (v === 'person') renderPerson();
 }
 $$('nav.tabs button').forEach(b => b.addEventListener('click', () => show(b.dataset.v)));
-$('#btnBack').addEventListener('click', () => show(currentView === 'guided' ? 'trash' : prevView));
+$('#btnBack').addEventListener('click', () => show(currentView === 'guided' ? 'trash' : currentView === 'person' ? 'people' : currentView === 'people' ? 'home' : prevView));
 function renderAll() { updateBadges(); refreshView(); }
 
 /* =========================================================
@@ -1099,6 +1431,8 @@ function renderHome() {
   $('#streak').innerHTML = st.streak ? `🔥 ${plural(st.streak, 'jour')} d'affilée · ${st.today} aujourd'hui` : (st.today ? `${st.today} triées aujourd'hui` : 'Trie quelques photos chaque jour pour lancer une série 🔥');
   $('#btnContinue').textContent = all.length - nDec ? 'Continuer le tri' : 'Tout est trié 🎉';
   $('#btnContinue').disabled = !(all.length - nDec);
+
+  renderPeopleHome();
 
   // Mois
   const months = new Map();
@@ -1290,8 +1624,8 @@ function drawSwipe() {
   }
   sw.celebrated = false;
   const next = P.get(sw.queue[sw.idx + 1]);
-  wrap.innerHTML = (next ? `<div class="swipe-card behind"><img src="${thumbs.get(next.id) || ''}" alt=""></div>` : '') +
-    `<div class="swipe-card" id="swCard">${mediaHTML(p, 'swMedia')}
+  wrap.innerHTML = (next ? `<div class="swipe-card behind"><div class="swbg" style="background-image:url('${thumbs.get(next.id) || ''}')"></div><img src="${thumbs.get(next.id) || ''}" alt=""></div>` : '') +
+    `<div class="swipe-card" id="swCard"><div class="swbg" style="background-image:url('${thumbs.get(p.id) || ''}')"></div>${mediaHTML(p, 'swMedia')}
       <div class="stamp keep">GARDER</div><div class="stamp trash">JETER</div><div class="stamp fav">★ FAVORI</div><div class="stamp later">PLUS TARD</div>
       <div class="info">${chipsFor(p)}</div></div>`;
   upgradeImg($('#swMedia'), p);

@@ -20,7 +20,7 @@ APPS = [
         "icon": "EDP/Assets.xcassets/AppIcon.appiconset/icon-1024.png",
         "subtitle": "Emploi du temps, devoirs et notes",
         "description": "EDP réunit ton emploi du temps, tes devoirs, tes notes et ta messagerie Pronote, le cahier de textes de l'ENT, "
-                       "tes événements, ton bus du matin, tes habits du jour et l'actu. L'appli ajoute la connexion ÉduConnect "
+                       "tes événements, ton bus du matin, tes habits du jour et l’actu. L'appli ajoute la connexion ÉduConnect "
                        "et les rappels.",
         "category": "education",
     },
