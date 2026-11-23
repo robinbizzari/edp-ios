@@ -408,6 +408,11 @@ header.top h1{font-size:32px;font-weight:800;letter-spacing:-.015em}
 nav.tabs{background:color-mix(in srgb,var(--card) 78%,transparent);backdrop-filter:saturate(1.6) blur(20px);-webkit-backdrop-filter:saturate(1.6) blur(20px);border-top:1px solid var(--line)}
 nav.tabs button.active svg{transform:translateY(-1px)}
 @media (prefers-reduced-motion:no-preference){.mcard,.lrow,.pcard,.btn{transition:transform .15s ease}.mcard:active,.lrow:active,.pcard:active{transform:scale(.97)}}
+
+/* Conformité Apple : 11 pt minimum (typography.md), transparence réduite et contraste augmenté */
+nav.tabs button{font-size:11px}
+@media (prefers-reduced-transparency:reduce){nav.tabs,header.top{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:var(--card)!important}}
+@media (prefers-contrast:more){.card,.lrow,.pcard,.mcard{box-shadow:0 0 0 1px currentColor!important}}
 </style>
 </head>
 <body>
