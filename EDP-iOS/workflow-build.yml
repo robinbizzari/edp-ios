@@ -1,0 +1,91 @@
+# Fabrique les applis iOS (EDP et Tri) sur un Mac de GitHub (gratuit), sans signature : AltStore la signe avec ton identifiant Apple.
+name: Construire les applis iOS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-ios
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      VERSION: 1.0.${{ github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Outils
+        run: |
+          brew install xcodegen
+          xcodebuild -version
+
+      - name: Projet Xcode
+        run: xcodegen generate
+
+      - name: Compiler EDP et Tri (sans signature)
+        run: |
+          for APP in EDP Tri; do
+            echo "::group::$APP"
+            xcodebuild \
+              -project EDP.xcodeproj -scheme "$APP" -configuration Release \
+              -sdk iphoneos -destination 'generic/platform=iOS' \
+              -derivedDataPath build \
+              CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+              MARKETING_VERSION="$VERSION" CURRENT_PROJECT_VERSION="${{ github.run_number }}" \
+              build > "build-$APP.log" 2>&1 || { echo "Échec de $APP"; grep -E "error:" "build-$APP.log" | head -40; tail -60 "build-$APP.log"; exit 1; }
+            grep -E "warning:" "build-$APP.log" | sort -u | head -15 || true
+            echo "::endgroup::"
+          done
+
+      - name: Paquets .ipa
+        run: |
+          for APP in EDP Tri; do
+            PRODUCT=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "$APP.app" | head -1)
+            test -n "$PRODUCT" || { echo "$APP.app introuvable"; exit 1; }
+            rm -rf Payload && mkdir Payload && cp -R "$PRODUCT" Payload/
+            zip -qry "$APP.ipa" Payload
+            ls -la "$APP.ipa"
+          done
+
+      - name: Source AltStore (apps.json)
+        env:
+          REPO: ${{ github.repository }}
+          TAG: v1.0.${{ github.run_number }}
+        run: python3 altstore/make_source.py
+
+      - name: Garder l'appli (Actions)
+        uses: actions/upload-artifact@v4
+        with:
+          name: applis-${{ env.VERSION }}
+          path: |
+            EDP.ipa
+            Tri.ipa
+
+      - name: Publier (Releases)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: EDP et Tri ${{ env.VERSION }}
+          body: |
+            Nouvelles versions d'EDP et de Tri. Dans AltStore : onglet Sources (si tu as ajouté la source) ou « + » avec EDP.ipa / Tri.ipa.
+          files: |
+            EDP.ipa
+            Tri.ipa
+            apps.json
+          make_latest: true
+
+      - name: Journal en cas d'échec
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: journal-compilation
+          path: build-*.log
+          if-no-files-found: ignore
