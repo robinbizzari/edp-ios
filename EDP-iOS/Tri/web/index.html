@@ -384,6 +384,23 @@ nav.tabs button.active svg{transform:translateY(-1px)}
 nav.tabs button{font-size:11px}
 @media (prefers-reduced-transparency:reduce){nav.tabs,header.top{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:var(--card)!important}}
 @media (prefers-contrast:more){.card,.lrow,.pcard,.mcard{box-shadow:0 0 0 1px currentColor!important}}
+@media (max-width:899px){
+  nav.tabs{touch-action:none;-webkit-user-select:none;user-select:none}
+  .tab-lens{position:absolute;left:0;top:5px;bottom:5px;border-radius:999px;pointer-events:none;opacity:0;transform:translateX(0) scale(.9);
+    background:color-mix(in srgb,#fff 55%,transparent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 6px 18px -6px rgba(0,0,0,.25);
+    -webkit-backdrop-filter:blur(6px) saturate(2);backdrop-filter:blur(6px) saturate(2);transition:opacity .18s,width .18s}
+  nav.tabs.dragging .tab-lens{opacity:1}
+  nav.tabs.dragging button{transition:transform .15s}nav.tabs.dragging button.hov{transform:scale(1.12)}
+}
+@media (max-width:899px) and (prefers-color-scheme:dark){.tab-lens{background:color-mix(in srgb,#fff 16%,transparent);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 6px 18px -6px rgba(0,0,0,.6)}}
+
+/* Barre d'onglets : capsule flottante façon iOS 26, comme EDP */
+@media (max-width:899px){
+  nav.tabs{left:12px!important;right:12px!important;bottom:calc(var(--safe-b) + 8px)!important;border-radius:999px!important;border:1px solid var(--line)!important;padding:6px!important;height:auto!important;
+    box-shadow:0 10px 30px -12px rgba(0,0,0,.35)!important;background:color-mix(in srgb,var(--card) 72%,transparent)!important;-webkit-backdrop-filter:blur(24px) saturate(1.8);backdrop-filter:blur(24px) saturate(1.8)}
+  nav.tabs button{border-radius:999px;padding:7px 0 6px}
+  nav.tabs button.active{color:var(--accent)!important;background:var(--accent-soft)!important}
+}
 </style>
 </head>
 <body>
@@ -2264,6 +2281,22 @@ async function init() {
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 init();
+})();
+
+// Barre d'onglets : on peut glisser le doigt dessus, comme sur iPhone (une « loupe » de verre suit le doigt)
+(() => {
+  const nav = document.querySelector('nav.tabs'); if (!nav) return;
+  const lens = document.createElement('span'); lens.className = 'tab-lens'; lens.setAttribute('aria-hidden', 'true'); nav.appendChild(lens);
+  let drag = null;
+  const btns = () => [...nav.querySelectorAll('button')].filter(b => b.offsetParent && getComputedStyle(b).display !== 'none');
+  const btnAt = x => btns().find(b => { const r = b.getBoundingClientRect(); return x >= r.left && x <= r.right; });
+  const place = x => { const r = nav.getBoundingClientRect(), b = btnAt(x) || btns()[0]; if (!b) return; const w = b.getBoundingClientRect().width;
+    lens.style.width = w + 'px'; lens.style.transform = `translateX(${Math.min(Math.max(x - r.left - w / 2, 4), r.width - w - 4)}px)`; return b; };
+  nav.addEventListener('pointerdown', e => { if (innerWidth >= 900) return; drag = { x0: e.clientX, moved: false }; nav.classList.add('dragging'); place(e.clientX); });
+  addEventListener('pointermove', e => { if (!drag) return; if (Math.abs(e.clientX - drag.x0) > 8) drag.moved = true; const b = place(e.clientX); btns().forEach(x => x.classList.toggle('hov', x === b)); });
+  const end = e => { if (!drag) return; const moved = drag.moved; drag = null; nav.classList.remove('dragging'); btns().forEach(x => x.classList.remove('hov'));
+    if (moved && e.type === 'pointerup') { const b = btnAt(e.clientX); if (b) { b.click(); if (navigator.vibrate) navigator.vibrate(8); } } };
+  addEventListener('pointerup', end); addEventListener('pointercancel', end);
 })();
 </script>
 </body>
