@@ -2,12 +2,10 @@ import UIKit
 import WebKit
 import AVKit
 import Photos
-import ContactsUI
 
 /// Affiche l'interface de Tri (embarquée dans l'appli, donc utilisable hors connexion)
 /// et lui donne accès à la photothèque via `window.TriNative` et les adresses `tri://app/ph/…`.
-final class TriWebViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, CNContactPickerDelegate {
-    private var pickReply: ((Bool, Any) -> Void)?
+final class TriWebViewController: UIViewController, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate {
     private var webView: WKWebView!
     private let scheme = TriSchemeHandler()
 
@@ -142,52 +140,6 @@ final class TriWebViewController: UIViewController, WKScriptMessageHandler, WKNa
             UIImpactFeedbackGenerator(style: strong ? .medium : .light).impactOccurred()
             reply(true, [String: Any]())
 
-        // ----- Visages et personnes (tout reste sur le téléphone) -----
-        case "faces.scan":
-            PhotoLibrary.authorize { granted, _ in
-                guard granted else { reply(false, "Tri n’a pas accès aux photos."); return }
-                UIApplication.shared.isIdleTimerDisabled = true   // l'écran reste allumé pendant l'analyse
-                FaceIndex.shared.scan(progress: { [weak self] done, total, faces in
-                    self?.emit("faces.progress", ["done": done, "total": total, "faces": faces])
-                }, done: { result in
-                    UIApplication.shared.isIdleTimerDisabled = false
-                    switch result {
-                    case .success(let info): reply(true, info)
-                    case .failure(let e): reply(false, e.localizedDescription)
-                    }
-                })
-            }
-
-        case "faces.cancel":
-            FaceIndex.shared.cancel(); reply(true, [String: Any]())
-
-        case "faces.clusters":
-            let t = Float((payload["threshold"] as? Double) ?? 0)
-            let minSize = (payload["min"] as? Int) ?? 3
-            FaceIndex.shared.clusters(threshold: t > 0 ? t : FaceIndex.shared.defaultThreshold(), minSize: minSize) { reply(true, $0) }
-
-        case "faces.similarity":
-            FaceIndex.shared.similarity((payload["a"] as? [String]) ?? [], (payload["b"] as? [String]) ?? []) { reply(true, ["score": $0]) }
-
-        case "faces.contacts":
-            FaceIndex.shared.loadContacts { result in
-                switch result {
-                case .success(let n): reply(true, ["count": n])
-                case .failure(let e): reply(false, e.localizedDescription)
-                }
-            }
-
-        case "faces.reset":
-            FaceIndex.shared.reset(); reply(true, [String: Any]())
-
-        case "contacts.pick":
-            // sélecteur de contacts d'Apple : aucune permission nécessaire, on ne reçoit que le contact choisi
-            let picker = CNContactPickerViewController()
-            picker.delegate = self
-            picker.displayedPropertyKeys = [CNContactGivenNameKey, CNContactFamilyNameKey]
-            pickReply = reply
-            present(picker, animated: true)
-
         case "openSettings":
             if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
             reply(true, [String: Any]())
@@ -195,18 +147,6 @@ final class TriWebViewController: UIViewController, WKScriptMessageHandler, WKNa
         default:
             reply(false, "Action inconnue : \(type)")
         }
-    }
-
-    func contactPicker(_ picker: CNContactPickerViewController, didSelect contact: CNContact) {
-        // le sélecteur ne garantit pas tous les champs : on ne lit que ceux qui sont disponibles
-        let nick = contact.isKeyAvailable(CNContactNicknameKey) ? contact.nickname : ""
-        let given = contact.isKeyAvailable(CNContactGivenNameKey) ? contact.givenName : ""
-        let family = contact.isKeyAvailable(CNContactFamilyNameKey) ? contact.familyName : ""
-        let name = nick.isEmpty ? [given, family].filter { !$0.isEmpty }.joined(separator: " ") : nick
-        pickReply?(true, ["id": contact.identifier, "name": name.isEmpty ? "Sans nom" : name]); pickReply = nil
-    }
-    func contactPickerDidCancel(_ picker: CNContactPickerViewController) {
-        pickReply?(true, ["cancelled": true]); pickReply = nil
     }
 
     private func emit(_ name: String, _ data: [String: Any]) {
@@ -328,7 +268,6 @@ final class TriSchemeHandler: NSObject, WKURLSchemeHandler {
         guard let id = query.first(where: { $0.name == "id" })?.value, !id.isEmpty else {
             respond(task, status: 400, mime: "text/plain", data: Data("id manquant".utf8)); return
         }
-        if url.path.hasSuffix("/face") { serveFace(task, id: id, query: query); return }
         let wanted = Double(query.first(where: { $0.name == "s" })?.value ?? "") ?? (url.path.hasSuffix("full") ? 2400 : 480)
         let size = CGFloat(min(max(wanted, 64), 4096))
         PhotoLibrary.jpeg(id: id, size: size) { [weak self] data, headers in
@@ -338,35 +277,6 @@ final class TriSchemeHandler: NSObject, WKURLSchemeHandler {
             } else {
                 self.respond(task, status: 404, mime: "text/plain", data: Data("Photo introuvable".utf8))
             }
-        }
-    }
-
-    /// Visage recadré (carré, un peu de marge) pour les vignettes des personnes.
-    private func serveFace(_ task: WKURLSchemeTask, id: String, query: [URLQueryItem]) {
-        let parts = (query.first(where: { $0.name == "b" })?.value ?? "").split(separator: ",").compactMap { Double($0) }
-        let side = CGFloat(min(max(Double(query.first(where: { $0.name == "s" })?.value ?? "") ?? 240, 64), 600))
-        guard parts.count == 4, let asset = PhotoLibrary.assets([id]).first else {
-            respond(task, status: 404, mime: "text/plain", data: Data("Visage introuvable".utf8)); return
-        }
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-            // assez de pixels pour que le visage reste net une fois recadré
-            let want = side / CGFloat(max(parts[2], 0.05))
-            guard let img = FaceIndex.uprightImage(asset, side: min(max(want, 600), 2400)) else {
-                self.respond(task, status: 404, mime: "text/plain", data: Data("Photo introuvable".utf8)); return
-            }
-            let W = CGFloat(img.width), H = CGFloat(img.height)
-            var r = CGRect(x: parts[0] * W, y: parts[1] * H, width: parts[2] * W, height: parts[3] * H)
-            let s = max(r.width, r.height) * 1.15
-            r = CGRect(x: r.midX - s / 2, y: r.midY - s / 2, width: s, height: s).intersection(CGRect(x: 0, y: 0, width: W, height: H))
-            guard let crop = img.cropping(to: r.integral) else {
-                self.respond(task, status: 404, mime: "text/plain", data: Data("Recadrage impossible".utf8)); return
-            }
-            let format = UIGraphicsImageRendererFormat(); format.scale = 1
-            let out = UIGraphicsImageRenderer(size: CGSize(width: side, height: side), format: format).jpegData(withCompressionQuality: 0.85) { _ in
-                UIImage(cgImage: crop).draw(in: CGRect(x: 0, y: 0, width: side, height: side))
-            }
-            self.respond(task, mime: "image/jpeg", data: out)
         }
     }
 
