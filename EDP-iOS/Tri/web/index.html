@@ -2031,17 +2031,58 @@ $('#btnSettings').addEventListener('click', settingsSheet);
 /* =========================================================
    Introduction (3 écrans)
    ========================================================= */
-const ONB = [
-  { t: 'Trie au pouce', b: `<div class="gest"><div>→ <b>Garder</b></div><div>← <b>Jeter</b></div><div>↑ <b>Favori</b> ★</div><div>↓ <b>Plus tard</b></div></div><p class="muted">Tu peux tout annuler avec ↶. Touche une photo pour l’agrandir et zoomer.</p>`, i: '<path d="M5 12h14M13 6l6 6-6 6"/>' },
-  { t: '100 % privé', b: `<p class="muted">L’analyse (doublons, flou, captures) se fait sur ton téléphone. Aucune photo n’est envoyée sur Internet, il n’y a pas de compte.</p>`, i: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>' },
-  { t: 'Une limite à connaître', b: `<p class="muted">Un site web ne peut pas supprimer de photos de ta galerie. L’appli prépare la liste (corbeille + suppression guidée), et tu supprimes dans Photos.</p><p class="muted small">Astuce : dans Safari, touche Partager › <b>Sur l’écran d’accueil</b> pour l’installer comme une vraie appli.</p>`, i: '<circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/>' },
-];
-function onboarding(i) {
-  const s = ONB[i];
-  openSheet(`<div class="onb"><div class="big-icon">${svg(s.i)}</div><h3>${s.t}</h3>${s.b}<div class="dots">${ONB.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div>
-    <button class="btn block" id="onbNext">${i < ONB.length - 1 ? 'Suivant' : 'C’est parti'}</button></div>`);
-  $('#onbNext').addEventListener('click', () => { if (i < ONB.length - 1) onboarding(i + 1); else { closeSheet(); S.onboarded = true; saveSettings(); } });
+
+/* ---------- Tuto de bienvenue (une fois par appareil) ---------- */
+function welcomeTour(opts, force) {
+  const KEY = 'tour.' + opts.key;
+  try { if (!force && localStorage.getItem(KEY)) return; } catch (e) { return; }
+  if (document.getElementById('tourWrap')) return;
+  if (!document.getElementById('tourCss')) {
+    const st = document.createElement('style'); st.id = 'tourCss';
+    st.textContent = `#tourWrap{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.42);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:tourIn .25s ease-out}
+#tourCard{width:100%;max-width:480px;background:#fff;color:#1c1c1e;border-radius:28px 28px 0 0;padding:26px 24px calc(env(safe-area-inset-bottom,0px) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.18);font:16px/1.45 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif}
+@media (min-width:600px){#tourWrap{align-items:center}#tourCard{border-radius:28px}}
+@media (prefers-color-scheme:dark){#tourCard{background:#1c1c1e;color:#f2f2f7}#tourCard .tr-txt{color:#aeaeb2}#tourCard .tr-skip{color:#aeaeb2}#tourCard .tr-dots i{background:#48484a}}
+#tourCard .tr-track{display:flex;transition:transform .32s cubic-bezier(.2,.8,.2,1);touch-action:pan-y}
+#tourCard .tr-slide{flex:0 0 100%;text-align:center;padding:0 4px}
+#tourCard .tr-ic{width:76px;height:76px;margin:6px auto 16px;border-radius:22px;display:grid;place-items:center;font-size:40px;background:color-mix(in srgb,var(--tr-c) 16%,transparent)}
+#tourCard h2{margin:0 0 8px;font-size:23px;line-height:1.2;letter-spacing:-.01em}
+#tourCard .tr-txt{margin:0 auto;max-width:34ch;color:#636366;font-size:16px}
+#tourCard .tr-dots{display:flex;justify-content:center;gap:7px;margin:22px 0 18px}#tourCard .tr-dots i{width:7px;height:7px;border-radius:50%;background:#d1d1d6;transition:all .2s}#tourCard .tr-dots i.on{width:20px;border-radius:4px;background:var(--tr-c)}
+#tourCard .tr-row{display:flex;gap:10px;align-items:center}
+#tourCard .tr-go{flex:1;height:52px;border:0;border-radius:16px;background:var(--tr-c);color:#fff;font:600 17px/1 inherit;cursor:pointer}
+#tourCard .tr-skip{height:52px;padding:0 14px;border:0;background:none;color:#8e8e93;font:500 16px/1 inherit;cursor:pointer}
+@keyframes tourIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){#tourWrap{animation:none}#tourCard .tr-track{transition:none}}`;
+    document.head.appendChild(st);
+  }
+  const S = opts.slides; let i = 0;
+  const w = document.createElement('div'); w.id = 'tourWrap'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-modal', 'true'); w.setAttribute('aria-label', 'Présentation');
+  w.style.setProperty('--tr-c', opts.accent || '#007aff');
+  const e = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  w.innerHTML = `<div id="tourCard"><div style="overflow:hidden"><div class="tr-track">${S.map(s => `<div class="tr-slide"><div class="tr-ic">${s.icon}</div><h2>${e(s.title)}</h2><p class="tr-txt">${e(s.text)}</p></div>`).join('')}</div></div>
+    <div class="tr-dots">${S.map(() => '<i></i>').join('')}</div><div class="tr-row"><button class="tr-skip">Passer</button><button class="tr-go">Suivant</button></div></div>`;
+  document.body.appendChild(w);
+  const track = w.querySelector('.tr-track'), go = w.querySelector('.tr-go'), skip = w.querySelector('.tr-skip');
+  const draw = () => { track.style.transform = `translateX(${-i * 100}%)`; w.querySelectorAll('.tr-dots i').forEach((d, k) => d.classList.toggle('on', k === i)); go.textContent = i === S.length - 1 ? (opts.done || 'C’est parti') : 'Suivant'; skip.style.visibility = i === S.length - 1 ? 'hidden' : 'visible'; };
+  const close = () => { try { localStorage.setItem(KEY, '1'); } catch (er) {} w.remove(); };
+  go.onclick = () => { if (i < S.length - 1) { i++; draw(); } else close(); };
+  skip.onclick = close;
+  let x0 = null;
+  track.addEventListener('touchstart', ev => { x0 = ev.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', ev => { if (x0 == null) return; const dx = ev.changedTouches[0].clientX - x0; if (dx < -40 && i < S.length - 1) i++; else if (dx > 40 && i > 0) i--; x0 = null; draw(); });
+  draw(); setTimeout(() => go.focus(), 50);
 }
+const TRI_TOUR = () => ({ key: 'tri1', accent: '#0a7cff', slides: [
+  { icon: '👋', title: 'Bienvenue sur Tri', text: 'Fais le ménage dans ta galerie en quelques minutes, une photo à la fois.' },
+  { icon: '👆', title: 'Trie au pouce', text: 'Vers la droite pour garder, vers la gauche pour jeter, vers le haut pour un favori, vers le bas pour plus tard. Tu peux toujours annuler avec ↶.' },
+  { icon: '✨', title: 'Nettoyage malin', text: 'L’accueil repère les doublons, les photos floues, les captures d’écran et « Les plus lourdes » pour libérer vite de la place.' },
+  { icon: '🗂️', title: 'Par mois et en albums', text: 'Reprends ta galerie mois par mois et range tes photos dans des albums. Glisse le doigt sur le menu du bas pour changer d’onglet.' },
+  { icon: '🔒', title: '100 % privé', text: 'Tout est analysé sur ton téléphone. Aucune photo n’est envoyée sur Internet, et il n’y a pas de compte.' },
+  NATIVE ? { icon: '🗑️', title: 'Tu gardes le dernier mot', text: 'Quand tu vides la corbeille de Tri, iOS te demande confirmation, puis les photos partent dans « Supprimés récemment » de Photos.' }
+         : { icon: '🗑️', title: 'Une limite à connaître', text: 'Un site ne peut pas supprimer tes photos : Tri prépare la liste et tu supprimes dans Photos. Pour l’installer, Safari › Partager › Sur l’écran d’accueil.' },
+] });
+function onboarding() { welcomeTour(TRI_TOUR(), true); }
 
 /* =========================================================
    Confettis
@@ -2276,7 +2317,7 @@ async function init() {
   matchMedia('(prefers-color-scheme: dark)').addEventListener && matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
   if (NATIVE) setupNative();
   rebuild(); renderAlbumBar(); renderAll();
-  if (!S.onboarded) onboarding(0);
+  if (!S.onboarded) welcomeTour(TRI_TOUR()); else { try { localStorage.setItem('tour.tri1', '1'); } catch (e) {} }
   if (NATIVE && P.size && Date.now() - (S.nLastScan || 0) > 6 * 3600e3) setTimeout(() => importNative({ quiet: true }), 1200);
   if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 }
