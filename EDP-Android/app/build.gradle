@@ -1,0 +1,13 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'fr.edp.app'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'fr.edp.app'
+        minSdk 24
+        targetSdk 34
+        versionCode Integer.parseInt(System.getenv('BUILD_NUMBER') ?: '1')
+        versionName "1.0.${System.getenv('BUILD_NUMBER') ?: '1'}"
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}

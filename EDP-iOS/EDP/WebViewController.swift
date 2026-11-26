@@ -43,6 +43,7 @@ final class WebViewController: UIViewController, WKScriptMessageHandler, WKNavig
         refresher.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         web.scrollView.refreshControl = refresher
 
+        web.hideInputAccessory()   // pas de barre ⌃ ⌄ ✓ d'Apple au-dessus du clavier
         webView = web
         view = web
     }
@@ -246,5 +247,23 @@ final class WeakScriptHandler: NSObject, WKScriptMessageHandler {
     init(_ target: WKScriptMessageHandler) { self.target = target }
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         target?.userContentController(userContentController, didReceive: message)
+    }
+}
+
+// Retire la barre « ⌃ ⌄ OK » qu'iOS ajoute au-dessus du clavier dans les pages web.
+// ponytail: astuce runtime classique (sous-classe de la vue de contenu qui renvoie nil), à retirer si Apple l'expose un jour
+extension WKWebView {
+    func hideInputAccessory() {
+        guard let content = scrollView.subviews.first(where: { String(describing: type(of: $0)).hasPrefix("WKContent") }),
+              let base: AnyClass = object_getClass(content) else { return }
+        let name = "\(base)_EDPNoAccessory"
+        var cls: AnyClass? = NSClassFromString(name)
+        if cls == nil, let made = objc_allocateClassPair(base, name, 0) {
+            let block: @convention(block) (AnyObject) -> UIView? = { _ in nil }
+            class_addMethod(made, #selector(getter: UIResponder.inputAccessoryView), imp_implementationWithBlock(block), "@@:")
+            objc_registerClassPair(made)
+            cls = made
+        }
+        if let cls { object_setClass(content, cls) }
     }
 }
