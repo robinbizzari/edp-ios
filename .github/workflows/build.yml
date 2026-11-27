@@ -60,6 +60,13 @@ jobs:
               codesign --force --sign - --entitlements Support/EDP.entitlements Payload/EDP.app
               codesign -d --entitlements - Payload/EDP.app 2>&1 | grep -c application-groups || true
             fi
+            if [ "$APP" = EDP ]; then
+              # deux versions : avec widgets (compte une appli de plus dans AltStore) et sans (EDP.ipa, par défaut)
+              zip -qry "EDP-widgets.ipa" Payload
+              rm -rf Payload/EDP.app/PlugIns
+              codesign --force --sign - --entitlements Support/EDP.entitlements Payload/EDP.app
+              ls -la EDP-widgets.ipa
+            fi
             zip -qry "$APP.ipa" Payload
             ls -la "$APP.ipa"
           done
@@ -76,6 +83,7 @@ jobs:
           name: applis-${{ env.VERSION }}
           path: |
             EDP-iOS/EDP.ipa
+            EDP-iOS/EDP-widgets.ipa
             EDP-iOS/Tri.ipa
 
       - name: Publier (Releases)
@@ -87,6 +95,7 @@ jobs:
             Nouvelles versions d'EDP et de Tri. Dans AltStore : onglet Sources (si tu as ajouté la source) ou « + » avec EDP.ipa / Tri.ipa.
           files: |
             EDP-iOS/EDP.ipa
+            EDP-iOS/EDP-widgets.ipa
             EDP-iOS/Tri.ipa
             EDP-iOS/apps.json
           make_latest: true
