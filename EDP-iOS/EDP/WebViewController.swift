@@ -1,5 +1,7 @@
 import UIKit
 import WebKit
+import WidgetKit
+import UserNotifications
 
 /// Affiche EDP (le site) en plein écran et fait le lien avec les fonctions du téléphone.
 /// Le site appelle `window.EDPNative.call(type, données)` ; on répond par `window.EDPNative._done(...)`.
@@ -58,6 +60,25 @@ final class WebViewController: UIViewController, WKScriptMessageHandler, WKNavig
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         ent.anchor = view.window
+        askPermissionsOnce()
+    }
+
+    /// Au premier lancement : micro + dictée, notifications, puis position (bus et météo).
+    private func askPermissionsOnce() {
+        let key = "edp.permissionsAsked.v1"
+        guard !UserDefaults.standard.bool(forKey: key) else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        Dictation.askPermissions { _ in
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in
+                DispatchQueue.main.async { LocationService.shared.currentPosition { _ in } }
+            }
+        }
+    }
+
+    private func js(_ code: String) { webView.evaluateJavaScript(code, completionHandler: nil) }
+    private static func jsString(_ s: String) -> String {
+        let d = (try? JSONSerialization.data(withJSONObject: [s])) ?? Data("[\"\"]".utf8)
+        return String(String(data: d, encoding: .utf8)!.dropFirst().dropLast())
     }
 
     @objc private func pullToRefresh() {
@@ -140,6 +161,26 @@ final class WebViewController: UIViewController, WKScriptMessageHandler, WKNavig
             let mode = payload["mode"] as? String ?? "auto"
             view.window?.overrideUserInterfaceStyle = mode == "dark" ? .dark : (mode == "light" ? .light : .unspecified)
             reply(true, [String: Any]())
+
+        case "dictate":
+            let d = Dictation.shared
+            if (payload["action"] as? String) == "stop" { d.stop(); reply(true, [String: Any]()); break }
+            d.onText = { [weak self] text, final in
+                self?.js("window.__edpDictate&&window.__edpDictate(\(Self.jsString(text)),\(final))")
+            }
+            d.onEnd = { [weak self] in self?.js("window.__edpDictateEnd&&window.__edpDictateEnd()") }
+            d.start(lang: (payload["lang"] as? String) ?? "fr-FR") { err in
+                if let err { reply(false, err) } else { reply(true, [String: Any]()) }
+            }
+
+        case "widgets":
+            // résumé envoyé par le site : on le garde pour les widgets et on les rafraîchit
+            if let d = try? JSONSerialization.data(withJSONObject: payload), WidgetStore.save(d) {
+                WidgetCenter.shared.reloadAllTimelines()
+                reply(true, ["saved": true])
+            } else {
+                reply(false, "Widgets indisponibles (groupe d’applis absent)")
+            }
 
         case "openExternal":
             if let s = payload["url"] as? String, let url = URL(string: s) { UIApplication.shared.open(url) }

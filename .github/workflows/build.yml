@@ -54,6 +54,12 @@ jobs:
             PRODUCT=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "$APP.app" | head -1)
             test -n "$PRODUCT" || { echo "$APP.app introuvable"; exit 1; }
             rm -rf Payload && mkdir Payload && cp -R "$PRODUCT" Payload/
+            # signature « ad hoc » avec les droits (groupe d'applis) : AltStore les relit pour partager les données avec les widgets
+            if [ "$APP" = EDP ]; then
+              for X in Payload/EDP.app/PlugIns/*.appex; do codesign --force --sign - --entitlements SupportWidgets/EDPWidgets.entitlements "$X"; done
+              codesign --force --sign - --entitlements Support/EDP.entitlements Payload/EDP.app
+              codesign -d --entitlements - Payload/EDP.app 2>&1 | grep -c application-groups || true
+            fi
             zip -qry "$APP.ipa" Payload
             ls -la "$APP.ipa"
           done

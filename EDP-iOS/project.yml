@@ -19,9 +19,14 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - path: EDP
+      - path: Shared
+    dependencies:
+      - target: EDPWidgets
+        embed: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: fr.bizzari.edp
+        CODE_SIGN_ENTITLEMENTS: Support/EDP.entitlements
         PRODUCT_NAME: EDP
         INFOPLIST_FILE: Support/Info.plist
         GENERATE_INFOPLIST_FILE: NO
@@ -34,6 +39,27 @@ targets:
         CODE_SIGN_IDENTITY: ""
         DEVELOPMENT_TEAM: ""
     scheme: {}
+
+  # Widgets de l'écran d'accueil et de l'écran verrouillé (ils lisent le résumé enregistré par l'appli)
+  EDPWidgets:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: EDPWidgets
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: fr.bizzari.edp.widgets
+        PRODUCT_NAME: EDPWidgets
+        INFOPLIST_FILE: SupportWidgets/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_ENTITLEMENTS: SupportWidgets/EDPWidgets.entitlements
+        TARGETED_DEVICE_FAMILY: "1"
+        SKIP_INSTALL: YES
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: ""
+        DEVELOPMENT_TEAM: ""
 
   Tri:
     type: application

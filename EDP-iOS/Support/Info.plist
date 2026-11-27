@@ -54,6 +54,10 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>EDP regarde dans quelle ville tu es pour le bus du matin et la météo. Ta position reste sur ton iPhone : elle n'est envoyée à personne.</string>
 	<!-- Caméra : scanner le QR code de connexion Pronote -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>EDP utilise le micro quand tu touches le gros micro bleu, pour ajouter une tâche ou un événement en parlant.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>EDP transforme ce que tu dis en texte pour créer tes tâches et événements.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>EDP utilise la caméra pour scanner le QR code de connexion affiché par Pronote.</string>
 </dict>
